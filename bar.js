@@ -19,9 +19,6 @@ Object.entries({
 	doc.textContent = 'Offline';
 	doc.id = "bar-status"
 	var liDoc = document.createElement('li');
-	liDoc.style.verticalAlign = "bottom";
-	liDoc.style.bottom = "0px";
-	liDoc.style.position = "fixed";
 	liDoc.innerHTML = doc.outerHTML;
 	document.getElementById('bar').innerHTML+=liDoc.outerHTML;
 })()

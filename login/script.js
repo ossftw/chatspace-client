@@ -22,6 +22,5 @@ client.on('login', msg => {
 		document.getElementById('output').textContent = "Invalid Login."
 	}
 })
-document.getElementById('themes-list').onchange = () => {
-themes.select(document.getElementById('themes-list').value);
-};
+
+
