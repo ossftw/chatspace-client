@@ -1,5 +1,5 @@
 window.client = {};
-client.uri = ((window.isSecureContext && window.location.hostname !== "localhost") ? "wss" : "ws") + "://" + window.location.host + "/ws";
+client.uri = "wss://chat.8448.space/ws";
 client.events = {}
 client.on = (name, fun) => {
         if (!client.events[name]) client.events[name] = [];
