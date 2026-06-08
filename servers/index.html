@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Chat Space - Servers</title>
+		<meta name="description" content="Chat Space - Simple Invite-Based Server and Channel chatting Website with server moderation features." />
+		<meta name="application-name" content="Chat Space" />
+		<link rel="manifest" href="/manifest.json" />
+		<meta name="mobile-web-app-capable" content="yes" />
+		<link rel="stylesheet" id="style" href="/style/dark.css" />
+	</head>
+	<body style="overflow: hidden;">
+		<ul class="bar" id="bar">
+		</ul>
+		<div style="margin-left:25%;padding:1px 16px;height:1000px;" id="main">
+		<button id="chat-toggle" style="float: right; z-index: 1; position: relative;">Toggle Chat</button>
+		<h4>Servers</h4>
+		<select id="server-list">
+		<option value="">Loading...</option>
+		</select>
+		<button id="server-select" type="button">Select</button>
+		<button id="server-new" type="button">New</button>
+		<button id="server-leave" type="button">Leave</button>
+		<button id="server-del" type="button">Delete</button>
+		<br><br>
+		<input id="invite-uses" type="number" min="0" max="1024" value="0">
+		<button id="invite-new" type="button">Create Invite</button>
+		<input id="invite" placeholder="Invite Here" maxlength="12" autocomplete="off" />
+		<button id="invite-join" type="button">Join</button>
+		<span id="invite-text" title="Click to copy"></span>
+		<h4>Channels</h4>
+		<select id="channel-list">
+		<option value="">Select a server first</option>
+		</select>
+		<button id="channel-select" type="button">Select</button>
+		<button id="channel-new" type="button">New</button>
+		<button id="channel-del" type="button">Delete</button>		
+		<input id="file-select" type="file" multiple></input>
+		<progress id="file-progress" hidden="true"></progress>
+		<span id="file-left" hidden="true">Waiting...</span>
+		<h3 id="server-name">Nothing chosen</h3>
+		<div id="chat">
+		<ul id="chat-box"></ul>
+		<input id="chat-input" placeholder="Send a message here..." maxlength="4096" autocomplete="off" />
+		</div>	
+		</div>
+	</body>
+	<script src="/style/index.js"></script>
+	<script src="../bar.js"></script>
+	<script src="../client.js"></script>
+	<script src="emoji.js"></script>
+	<script src="script.js"></script>
+</html>

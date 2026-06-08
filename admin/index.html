@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Chat Space - Admin</title>
+		<meta name="description" content="Chat Space - Simple Invite-Based Server and Channel chatting Website with server moderation features." />
+		<meta name="application-name" content="Chat Space" />
+		<link rel="manifest" href="/manifest.json" />
+		<meta name="mobile-web-app-capable" content="yes" />
+		<link rel="stylesheet" id="style" href="/style/dark.css" />
+	</head>
+	<body>
+	<center><br><br><br>
+	<h1>Admin Panel</h2>
+	<h2>Ban</h2>
+	<h3>Mode<h3>
+	<select id="ban-bool">
+		<option value="true">Ban</option>
+		<option value="false">Unban</option>
+	</select>
+	<h3>Type of User</h3>
+	<select id="ban-usertype">
+		<option value="id">ID</option>
+		<option value="name">Username</option>
+	</select>
+	<h3>User</h3>
+	<input id="ban-user" placeholder="Username or ID" autocomplete="off" />
+	<br><br><br><button type="button" id="ban-send">Send</button><br><br><br><br><br>
+	<h2>Bot</h2>
+	<h3>Mode<h3>
+	<select id="bot-bool">
+		<option value="true">Give</option>
+		<option value="false">Take</option>
+	</select>
+	<h3>Type of User</h3>
+	<select id="bot-usertype">
+		<option value="id">ID</option>
+		<option value="name">Username</option>
+	</select>
+	<h3>User</h3>
+	<input id="bot-user" placeholder="Username or ID" autocomplete="off" />
+	<br><br><br><button type="button" id="bot-send">Send</button><br><br><br><br><br>
+	<h2>Password Reset</h2>
+	<h3>Type of User</h3>
+	<select id="reset-usertype">
+		<option value="id">ID</option>
+		<option value="name">Username</option>
+	</select>
+	<h3>User</h3>
+	<input id="reset-user" placeholder="Username or ID" autocomplete="off" />
+	<h3>Password</h3>
+	<input id="reset-password" placeholder="Password in PLAINTEXT" autocomplete="off" />
+	<br><br><br><button type="button" id="reset-send">Send</button><br><br><br><br><br>
+	<h2>Delete File</h2>
+	<h3>File Name</h3>
+	<input id="delfile-file" placeholder="File Name" autocomplete="off" />
+	<br><br><br><button type="button" id="delfile-send">Send</button><br><br><br><br><br>
+	<body>
+	<script src="/style/index.js"></script>
+	<script src="../client.js"></script>
+	<script src="script.js"></script>
+</html>

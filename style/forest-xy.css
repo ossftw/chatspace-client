@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300&display=swap');
+
+body {
+        background: linear-gradient(135deg, #000000, #0d4126);
+        font-family: Kanit, sans-serif !important;
+		font-weight: 300;
+        margin: 0;
+}
+button,
+select,
+textarea,
+input {
+        font-family: Kanit, sans-serif !important;
+		font-weight: 300;
+}
+code {
+	display: block;
+	background: rgb(18, 53, 19);
+}
+h1, h2, h3, h4, h5, h6, p, span, b, pre {
+        color: rgb(150, 206, 143);
+}
+a {
+        color: rgb(96, 128, 84);
+}
+button, select, input {
+	color: rgb(150, 206, 143);
+	background-color: rgb(34, 61, 17);
+	border-radius: 2px;
+	border: none;
+}
+
+ul.bar {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        width: 25%;
+        background: linear-gradient(135deg, #0a4c05, #1a5c15);
+        position: fixed;
+        height: 100%;
+        overflow: auto;
+}
+li a {
+        display: block;
+        color: #fff;
+        padding: 8px 16px;
+        text-decoration: none;
+}
+li a:hover {
+        transition-duration: 125ms;
+        background-color: rgb(56, 95, 32)
+}
+.active {
+        transition-duration: 125ms;
+        background-color: rgb(96, 128, 84)
+}
+#chat {
+	position: fixed;
+	bottom: 0px;
+	left: 25%;
+	width: 75%;
+	vertical-align: bottom;
+	font-size: 15px;
+	color: #fff;
+	text-shadow: rgb(26, 91, 29) 0.67px 0.67px; /* 6 7 */
+}
+#chat,#chat * {
+    user-select: text;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+}
+#chat ul {
+	list-style: none;
+	margin: 4px;
+	padding: 0;
+	background-attachment: local;
+	max-height: 50em;
+	overflow-y: scroll;
+	overflow-x: hidden;
+	word-wrap: break-word;
+}
+#chat li {
+	padding: 2px;
+	opacity: 0;
+	color: #fff;
+}
+#chat input {
+	margin: 4px;
+	width: 97%;
+	border: 1px solid #469d5d;
+	background: 0 0;
+	text-shadow: rgb(26, 91, 29) 0.67px 0.67px;
+	float: right;
+	color: rgb(150, 206, 143);
+	border-radius: 4px
+}
+#chat input:focus {
+	outline: 0;
+	border: 1px solid #0f431d
+}

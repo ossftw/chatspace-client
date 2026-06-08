@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Chat Space - Protocol Docs</title>
+		<meta name="description" content="Chat Space - Simple Invite-Based Server and Channel chatting Website with server moderation features." />
+		<meta name="application-name" content="Chat Space" />
+		<link rel="manifest" href="/manifest.json" />
+		<meta name="mobile-web-app-capable" content="yes" />
+		<link rel="stylesheet" id="style" href="/style/dark.css" />
+	</head>
+	<body>
+	<h1>Chat Space Protocol Documentation (Incomplete)</h1>
+		<h2>Important things</h2>
+			<h3>Public User Object</h3>
+			<p>When users are shown, here is an example Object for it.</p>
+			<pre><code>{
+    "id": "1",
+    "nickname": "Someone8448",
+    "username": "someone8448",
+    "bot": false,
+    "rank": "owner",
+    "online": true
+}</code></pre>
+			<h3>Invite Object</h3>
+			<p>When requesting the Invites as a administrator, here is the Objects</p>
+			<pre><code>{
+  "id": "MtsvNdiV6M",
+  "guild": "1",
+  "user": "1"
+}</code></pre>
+	<h3>IDs</h3>
+	<p>IDs are Numbers, but as Strings. It counts up, and their may be the same number for a user ID, a message ID, and a channel ID, etc... There are IDs for users, messages, channels, and guilds. Files and Invites use a Unique ID system.</p>
+	<p>Oh. And Guild = Server</p>
+	<h3>Websocket</h3>
+	<p>The WebSocket is on wss://chat.8448.space/ws . You send messages once it opens, and you send stringified Objects, there is an exception for file upload messages</p>
+		<h2>Server-bound (Client -> Server)</h2>
+		<h3>Channel</h3>
+		<p>This is data handled for a specific channel. The channel ID has to be a String of the Channel ID, and it has to be existant in a server you are in.</p>
+		<h4>Join</h4>
+		<p>Connect to a channel in a server you are in and have access to. You can join multiple channels per-socket.</p>
+		<pre><code>{
+  "m": "channel",
+  "type": "join",
+  "channel": "81",
+  "chat": true
+}</code></pre>
+	<p>Set <b>chat</b> to true to receive the recent messages. <b>channel</b> is the Channel ID. You can not join that channel if you are already in it.</p>
+	<h4>Leave</h4>
+	<p>Leave that channel, and stop receiving messages from that channel.</p>
+	<pre><code>{
+  "m": "channel",
+  "type": "leave",
+  "channel": "81"
+}</code></pre>
+	<h4>Get</h4>
+	<p>Get the chat messages x chats up</p>
+	<pre><code>{
+  "m": "channel",
+  "type": "get",
+  "channel": "81",
+  "chats": 100
+}</code></pre>
+	<p>You must be in this channel to get this data, though.</p>
+	<h4>Send</h4>
+	<p>Send a chat message in a channel</p>
+	<pre><code>{
+  "m": "channel",
+  "type": "send",
+  "channel": "81",
+  "message": "Hello, World!"
+}</code></pre>
+	<p>You must be in the channel to send a message</p>
+	<h4>Delete</h4>
+	<p>Delete the channel from the server.</p>
+	<pre><code>{
+  "m": "channel",
+  "type": "delete",
+  "channel": "81"
+}</code></pre>
+	<p>This only works if the user is ADMIN or OWNER in the server</p>
+	<h3>File</h3>
+	<p>This is file uploading.</p>
+	<h4>Create</h4>
+	<p>Initialize the uploading for the file.</p>
+	<pre><code>{
+  "m": "file",
+  "type": "create",
+  "file": "txt",
+  "size": 4096,
+  "ft": "text/plain"
+}</code></pre>
+	<h4>Done<h4>
+	<p>To finish the upload, only do after you verified all the data is uploaded!</p>
+	<pre><code>{
+  "m": "file",
+  "type": "done",
+  "id": "file.txt"
+}</code></pre>
+	<h4>Get</h4>
+	<p>Request the file Object</p>
+	<pre><code>{
+  "m": "file",
+  "type": "get",
+  "id": "file.txt"
+}</code></pre>
+	<h4>Data</h4>
+	<p>Upload a chunk of the file.</p>
+	<pre><code>{
+  "m": "file",
+  "type": "data",
+  "id": "file.txt",
+  "chunk": 0,
+  "data": "Hello, World!"
+}</code></pre>
+	<p>In JSON, <b>data</b> can also be an array of bytes, or a normal String for normal text data</p>
+	<h4>Data Binary message</h4>
+	<p>This data is sent raw as Binary data to the websocket</p>
+	<p>Here is an array of bytes as an example in decimal</p>
+	<pre><code>[
+  117, // All file upload messages in binary start with this, it is 'u' in plain text
+  8, // The length of the file name or file ID
+  102, 105, 108, 101, 46, 116, 120, 116, //next eight bytes here are the file name, in text it is 'file.txt'. Real file names will be >64 bytes long though. Equivalent to id property in JSON message
+  0, 0, 1, 0, //next four bytes make up a 32-bit integer. Here, it is 256. This number is equivalent of the JSON "chunk"
+  72, 101, 108, 108, 111, 32, 87, 111, 114, 108, 100 //the rest of the data is the chunk of the file data.
+]</code></pre>
+	<h3>Guild</h3>
+	<p>These are different server-specific things</p>
+	<h4>List</h4>
+	<p>Request the list of guilds/servers you are in</p>
+	<pre><code>{
+  "m": "guild",
+  "type": "list"
+}</code></pre>
+	<h4>New</h4>
+	<p>Create a new Guild/Server.</p>
+	<pre><code>{
+  "m": "guild",
+  "type": "new",
+  "name": "Testing Server"
+}</code></pre>
+	<h4>New Channel</h4>
+	<p>Create a new Channel.</p>
+	<pre><code>{
+  "m": "guild",
+  "type": "new-channel",
+  "id": "1",
+  "name": "Silly Hello Chat"
+}</code></pre>
+	<h4>Delete</h4>
+	<p>Delete a server, server OWNER only though.</p>
+	<pre><code>{
+  "m": "guild",
+  "type": "delete",
+  "id": "1"
+}</code></pre>
+	<h4>Channel</h4>
+	<p>Get the channel list of a specific server.</p>
+	<pre><code>{
+  "m": "guild",
+  "type": "channels",
+  "id": "1"
+}</code></pre>
+	<h4>Invite</h4>
+	<p>Create an Invite to the guild/server</p>
+	<pre><code>{
+  "m": "guild",
+  "type": "invite",
+  "id": "1"
+}</code></pre>
+	<h4>Join</h4>
+	<p>Join a server with the Invite code</p>
+	<pre><code>{
+  "m": "guild",
+  "type": "join",
+  "invite": "wvuKgdhTMy"
+}</code></pre>
+	<h4>Leave</h4>
+	<p>Leave the server, you cannot leave as server owner</p>
+	<pre><code>{
+  "m": "guild",
+  "type": "leave",
+  "id": "1"
+}</code></pre>
+	<h4>Kick / Ban</h4>
+	<p>Kick or Ban a user from the server, admin or owner only</p>
+	<pre><code>{
+  "m": "guild",
+  "id": "1", // guild id
+  "type": "kick",
+  "user": "1", // user id
+  "perm": false // set to true to ban them, permanently.
+}</code></pre>
+	<h4>Admin</h4>
+	<p>As server owner, give or take admin</p>
+	<pre><code>{
+  "m": "guild",
+  "id": "1", // guild id
+  "type": "admin",
+  "user": "1", // user id
+  "give": true // if true, give admin, if false, take it away
+}</code></pre>
+	<h4>DelInv (Delete Invite)</h4>
+	<p>Delete an Invite as server admin or owner</p>
+	<pre><code>{
+  "m": "guild",
+  "type": "delinv",
+  "id": "1",
+  "invite": "wvuKgdhTMy",
+  "all": false // set to true to delete every invite, invite property is not needed here.
+}</code></pre>
+	<h4>GetInv (Get Invite)</h4>
+	<p>Get an Invite Code</p>
+	<pre><code>{
+  "m": "guild",
+  "type": "getinv",
+  "invite": "wvuKgdhTMy"
+}</code></pre>
+	<h3>Login</h3>
+	<p>User account management</p>
+	<p>On all of these, instead of using id property, you can use the name property with your username.</p>
+	<h4>Create</h4>
+	<p>Create an account</p>
+	<pre><code>{
+  "m": "login",
+  "type": "create",
+  "name": "helloworld",
+  "pass": "1234567890"
+}</code></pre>
+	<h4>Token</h4>
+	<p>Log into an account with a token</p>
+	<pre><code>{
+  "m": "login",
+  "type": "token",
+  "id": "1",
+  "token": "fb719254-5021-40da-954c-16d59f89cb02"
+}</code></pre>
+	<h4>Pass</h4>
+	<p>Log into an account with a password</p>
+	<pre><code>{
+  "m": "login",
+  "type": "pass",
+  "id": "1",
+  "pass": "1234567890"
+}</code></pre>
+	<h4>SetName</h4>
+	<p>Set your display name, user name is a constant.</p>
+	<pre><code>{
+  "m": "login",
+  "type": "setname",
+  "pass": "1234567890",
+  "name": "Hello World"
+}</code></pre>
+	<h4>Reset</h4>
+	<p>Change your password and reset your token</p>
+	<pre><code>{
+  "m": "login",
+  "type": "reset",
+  "old": "1234567890",
+  "new": "helpmeineedanewpassword"
+}</code></pre>
+	<h3>Ping</h3>
+	<p>Send a ping message to the server, can be used for latency and time offset.</p>
+	<pre><code>{
+  "m": "ping",
+  "e": 1745112909905 //can be whatever you want
+}</code></pre>
+	<h3>User</h3>
+	<p>Request users from the server</p>
+	<pre><code>{
+  "m": "user",
+  "id": "1" //if no ID, then use name property with username.
+}</code></pre>	
+	<body>
+	<script src="/style/index.js"></script>
+</html>

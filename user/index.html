@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Chat Space - User</title>
+		<meta name="description" content="Chat Space - Simple Invite-Based Server and Channel chatting Website with server moderation features." />
+		<meta name="application-name" content="Chat Space" />
+		<link rel="manifest" href="/manifest.json" />
+		<meta name="mobile-web-app-capable" content="yes" />
+		<link rel="stylesheet" id="style" href="/style/dark.css" />
+	</head>
+	<body><center>
+		<br><br><br>
+		<select id="usertype">
+		<option value="name">Username</option>
+		<option value="id">ID</option>
+		</select>
+	<input id="user" placeholder="Username or ID" autocomplete="off" />
+	<br><br><br><button type="button" id="user-send">Send</button><br><br><br><br><br>
+		<div id="user-info"><span>Waiting</span></div>
+	<body>
+	<script src="/style/index.js"></script>
+	<script src="../client.js"></script>
+	<script src="script.js"></script>
+</html>
