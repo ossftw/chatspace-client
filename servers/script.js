@@ -235,12 +235,14 @@ chat.clear = () => {
 	chat.messages = {};
 	chat.stat[1] = 0
 }
-chat.send = (msg) => client.send({m: "channel", type: "send", channel: client.channel, message: msg});
-chat.input.onkeypress = (key) => {
+chat.send = async (msg) => {
+  var encrypted = E2EE.isReady ? await E2EE.encrypt(msg, client.channel) : null;
+  client.send({m: "channel", type: "send", channel: client.channel, message: encrypted || msg});
+};
+chat.input.onkeypress = async (key) => {
 	if (key.key !== "Enter") return;
-	//var inputEl = document.getElementById('chat-input');
 	if (chat.input.value.length == 0 || !client.channel || !client.connected()) return;
-	chat.send(chat.input.value);
+	await chat.send(chat.input.value);
 	chat.input.value = '';
 	if ((chat.box.scrollTop + chat.box.clientHeight - chat.box.scrollHeight) != 0) chat.box.scrollTo(0, chat.box.scrollHeight - chat.box.clientHeight);
 }
@@ -250,6 +252,7 @@ client.on('open', () => {
 })
 client.on('login', msg => {
 	if (!msg.login) return window.location.assign(`/login/#${encodeURIComponent(location.href.substr(location.origin.length))}`);
+	E2EE.init();
 	client.send({m: "guild", type: "list"});
 	if (client.channel) client.send({m: "channel", type: "join", channel: client.channel, chat: true});
 })
@@ -312,8 +315,33 @@ client.on('guild', msg => {
 	if (msg.type !== "join") return;
 	document.getElementById('invite-text').textContent = msg.res.toUpperCase();
 })
-client.on('chats', msg => {
+client.on('chats', async msg => {
 	if (msg.id !== client.channel) return;
+
+	var e2eeMsgs = [];
+	for (var i = 0; i < msg.chat.length; i++) {
+		var m = msg.chat[i];
+		if (!m.message) { e2eeMsgs.push(m); continue; }
+		if (m.message.startsWith('[E2EE_KEY:')) {
+			var parts = m.message.match(/^\[E2EE_KEY:v1:([A-Za-z0-9_\-]+)\]$/);
+			if (parts) {
+				E2EE.addPeerKey(m.user.id, parts[1]);
+				E2EE.addChUser(msg.id, m.user.id);
+			}
+			continue;
+		}
+		if (m.message.startsWith('[E2EE_MSG:')) {
+			var decrypted = await E2EE.decrypt(m.user.id, m.message, msg.id);
+			if (decrypted !== null) {
+				m.message = decrypted;
+			} else {
+				m.message = '[E2EE Message - could not decrypt]';
+			}
+		}
+		e2eeMsgs.push(m);
+	}
+	msg.chat = e2eeMsgs;
+
 	if (msg.chats) {
 		if (!chat.count) return;
 		msg.chat.reverse();
@@ -325,9 +353,9 @@ client.on('chats', msg => {
 		location.hash = `${client.guild}-${client.channel}`;
 		chat.resize();
 		chat.blocks = ((localStorage.blocks && localStorage.blocks.length) ? localStorage.blocks.split(',') : []);
+		setTimeout(() => E2EE.announceKey(msg.id), 1000);
 	}
 	if (msg.chat.length == 0) return;
-	//msg.chat.forEach(message => chat.receive(message.user.nickname, message.user.username, message.message, !!msg.chats, message.id));
 	msg.chat.forEach(message => chat.receive(message, !!msg.chats));
 	var box = document.getElementById('chat-box');
 	if (box.scrollHeight !== box.clientHeight) return;
@@ -335,10 +363,29 @@ client.on('chats', msg => {
 	client.send({m: "channel", type: "get", channel: client.channel, chats: chat.count});
 })
 
-client.on('chat', msg => {
+client.on('chat', async msg => {
 	if (msg.channel !== client.channel) return;
-//	chat.receive(msg.user.nickname, msg.user.username, msg.message, false, msg.id);
-	chat.receive(msg, false, true)
+	if (!msg.message) { chat.receive(msg, false, true); return; }
+
+	if (msg.message.startsWith('[E2EE_KEY:')) {
+		var parts = msg.message.match(/^\[E2EE_KEY:v1:([A-Za-z0-9_\-]+)\]$/);
+		if (parts) {
+			E2EE.addPeerKey(msg.user.id, parts[1]);
+			E2EE.addChUser(msg.channel, msg.user.id);
+		}
+		return;
+	}
+
+	if (msg.message.startsWith('[E2EE_MSG:')) {
+		var decrypted = await E2EE.decrypt(msg.user.id, msg.message, msg.channel);
+		if (decrypted !== null) {
+			msg.message = decrypted;
+		} else {
+			msg.message = '[E2EE Message - could not decrypt]';
+		}
+	}
+
+	chat.receive(msg, false, true);
 });
 
 document.getElementById('server-select').onclick = () => {
