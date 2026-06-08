@@ -6,12 +6,12 @@
 		<meta name="application-name" content="Chat Space" />
 		<link rel="manifest" href="/manifest.json" />
 		<meta name="mobile-web-app-capable" content="yes" />
-		<link rel="stylesheet" id="style" href="/style/dark.css" />
+		<link rel="stylesheet" id="style" href="/style.css" />
 	</head>
 	<body>
 		<ul class="bar" id="bar">
 		</ul>
-		<div style="margin-left:25%;padding:1px 16px;height:1000px;" id="main">
+		<div id="main">
 		<center>
 		<h2>Account</h2>
 		<input id="acc-display-name" placeholder="Display Name" maxlength="64" autocomplete="off" />
@@ -57,8 +57,6 @@
 		<p id="reset-output"></p>
 		<br>
 		<h2>Appearance</h2>
-		<select id="themes-list"></select>
-		<br>
 		<input id="hidetime" type="checkbox"/><span>Hide Timestamps in Chat</span><br>
 		<input id="showidschat" type="checkbox"/><span>Show IDs in Chat</span><br>
 		<input id="nochatcolors" type="checkbox"/><span>No Chat Colors</span><br>

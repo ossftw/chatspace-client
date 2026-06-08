@@ -73,9 +73,7 @@ client.on('login', msg => {
 		localStorage.clear();
 		window.location.assign('/login');
 })
-document.getElementById('themes-list').onchange = () => {
-themes.select(document.getElementById('themes-list').value);
-};
+
 document.getElementById('custom-audio').onclick = () => {
 var aud = prompt('What do you want the custom audio to be?');
 if (!aud || !aud.trim().length) return delete localStorage.audio();
