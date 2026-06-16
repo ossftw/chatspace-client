@@ -1,6 +1,6 @@
 var chat = {count: 0, replies: {}, messages: {}, stat: ['Servers', 0]};
 chat.title = () => document.title = `Chat Space - ${chat.stat[0]}` + (chat.stat[1] ? ` (${chat.stat[1].toLocaleString()})` : '');
-if (!localStorage.noAudio) chat.audio = new Audio(localStorage.audio || `${location.origin}/servers/notify.wav`);
+if (!localStorage.noAudio) chat.audio = new Audio(localStorage.audio || `${location.origin}/assets/audio/notify.wav`);
 chat.validURL = (url) => {
 	try {
 		new URL(url);

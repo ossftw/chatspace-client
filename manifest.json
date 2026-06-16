@@ -7,12 +7,12 @@
 	"description": "A server-channel system in a chat site.",
 	"icons": [
 		{
-		"src": "/icons/light-192.png",
+		"src": "/assets/icons/light-192.png",
 		"sizes": "192x192",
 		"type": "image/png"
 		},
 		{
-		"src": "/icons/light-512.png",
+		"src": "/assets/icons/light-512.png",
 		"sizes": "512x512",
 		"type": "image/png"
 		}
