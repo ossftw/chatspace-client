@@ -37,7 +37,7 @@ html {
 }
 
 a {
-  color: #fff;
+  color: #f8c640;
   text-decoration: none;
 }
 
@@ -363,7 +363,7 @@ ul.bar .active {
 }
 
 .chatlink {
-  color: #fff;
+  color: #f8c640;
   text-decoration: none;
   word-break: break-all;
 }
