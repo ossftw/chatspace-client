@@ -23,6 +23,7 @@ body {
   -moz-osx-font-smoothing: grayscale !important;
   text-rendering: optimizeSpeed !important;
   box-sizing: border-box;
+  cursor: url("/assets/img/cursor.png") 0 0, auto !important;
 }
 
 html {
