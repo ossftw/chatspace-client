@@ -40,7 +40,7 @@
         });
     }
 
-    var ctrlDown = false;
+    var shiftDown = false;
     var clicking = false;
     var shapes = [];
     var lastPos = null;
@@ -90,9 +90,9 @@
     }
 
     document.addEventListener('keydown', function (e) {
-        ctrlDown = e.ctrlKey || e.metaKey;
-        canvas.style.pointerEvents = ctrlDown ? 'auto' : 'none';
-        if (ctrlDown) {
+        shiftDown = e.shiftKey || e.metaKey;
+        canvas.style.pointerEvents = shiftDown ? 'auto' : 'none';
+        if (shiftDown) {
             document.body.style.userSelect = 'none';
             document.body.style.webkitUserSelect = 'none';
         } else {
@@ -101,9 +101,9 @@
         }
     });
     document.addEventListener('keyup', function (e) {
-        ctrlDown = e.ctrlKey || e.metaKey;
-        canvas.style.pointerEvents = ctrlDown ? 'auto' : 'none';
-        if (!ctrlDown) {
+        shiftDown = e.shiftKey || e.metaKey;
+        canvas.style.pointerEvents = shiftDown ? 'auto' : 'none';
+        if (!shiftDown) {
             document.body.style.userSelect = '';
             document.body.style.webkitUserSelect = '';
             clicking = false;
@@ -112,7 +112,7 @@
     });
 
     document.addEventListener('mousedown', function (e) {
-        if (!ctrlDown) return;
+        if (!shiftDown) return;
         clicking = true;
         lastPos = null;
         pos = { x: normX(e.clientX), y: normY(e.clientY) };
@@ -125,7 +125,7 @@
     });
 
     document.addEventListener('mousemove', function (e) {
-        if (!clicking || !ctrlDown) {
+        if (!clicking || !shiftDown) {
             lastPos = null;
             return;
         }
@@ -146,11 +146,11 @@
     });
 
     document.addEventListener('dragstart', function (e) {
-        if (ctrlDown) e.preventDefault();
+        if (shiftDown) e.preventDefault();
     }, true);
 
     document.addEventListener('selectstart', function (e) {
-        if (ctrlDown) e.preventDefault();
+        if (shiftDown) e.preventDefault();
     }, true);
 
     function draw() {
