@@ -562,7 +562,7 @@ upload.upload = (ind) => new Promise(async r => {
 		upload.progress.value = 0;
 		upload.left.hidden = false;
 		upload.left.textContent = `(${ind} / ${upload.input.files.length}) ` + "Waiting...";
-		client.send({m: "file", type: "create", file: upload.input.files.item(ind).name.split('.').reverse()[0], size: fileData.byteLength, ft: upload.input.files.item(ind).type});
+		client.send({m: "file", type: "create", file: upload.input.files.item(ind).name.split('.').reverse()[0], name: upload.input.files.item(ind).name, size: fileData.byteLength, ft: upload.input.files.item(ind).type});
 })
 upload.input.onchange = async () => {
 	for (var filenum = 0; filenum < upload.input.files.length; filenum++) {
