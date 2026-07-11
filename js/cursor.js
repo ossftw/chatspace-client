@@ -109,6 +109,7 @@
 		if (!msg.data || msg.data.m !== "cursor") return;
 		if (msg.channel !== client.channel) return;
 		const userId = String(msg.user);
+		if (userId === localStorage.id) return;
 		const c = getOrCreate(userId);
 		c.tx = msg.data.x * 100;
 		c.ty = msg.data.y * 100;
