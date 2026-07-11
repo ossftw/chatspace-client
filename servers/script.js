@@ -108,7 +108,7 @@ chat.receive = (msg, above, current) => {
 			oldEl.className = "chatmessage";
 			oldEl.textContent = messageArr.join(' ');
 			messageHt.append(oldEl);
-			if (embeds < 4 && new URL(word).origin === location.origin && localStorage.embeds) {
+			if (embeds < 4 && new URL(word).origin === "https://chat.8448.space" && localStorage.embeds) {
 				var extension = word.split('.')[word.split('.').length - 1];
 				if (['jpg', 'jpeg', 'png', 'heic', 'gif'].includes(extension)) {
 				//photo embed
