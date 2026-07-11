@@ -462,6 +462,13 @@ ul.bar .active {
   position: relative;
 }
 
+.view-toggle {
+  z-index: 1;
+  position: relative;
+  float: right;
+  margin-left: 4px;
+}
+
 /* Users list (info page) */
 #users {
   width: 100%;
