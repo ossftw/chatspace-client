@@ -140,7 +140,7 @@
 		if (window.client && window.client.on) {
 			window.client.on("login", () => subscribe())
 		}
-		client.on('custom', console.log)
+		//client.on('custom', console.log)
 		for (const id in cursors) {
 			fetchUserInfo(id, cursors[id]);
 		}
