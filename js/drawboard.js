@@ -264,10 +264,12 @@
                     }
                 };
                 window.client.on("login", fetchColor);
+                window.client.on("login", () => this.#subscribe()); // Something is wrong here but I don't know
                 window.client.on("user", (msg) => {
                     if (msg.id !== localStorage.id) return;
                     if (msg.color) this.#color = msg.color;
                 });
+                window.client.on("custom", (msg) => this.#handleCustomMessage(msg));
                 fetchColor();
             }
 
@@ -277,6 +279,52 @@
 
         #saveDrawingMutes = () => {
             localStorage.drawingMutes = this.#drawingMutes.filter(id => id).join(",");
+        }
+
+        #subscribe = () => {
+            if (!window.client?.connected?.()) return;
+            const msg = { m: "guild", type: "+custom", event: "drawboard" };
+            //console.log("subscribe", msg);
+            window.client.send(msg);
+        }
+
+        #sendCustomData = (payload) => {
+            if (!window.client?.connected?.() || !window.client.channel) return;
+            const b64 = btoa(String.fromCharCode(...payload));
+            const msg = { m: "channel", type: "custom", channel: window.client.channel, data: { m: "drawboard", d: b64 } };
+            //console.log("send:" msg, `(${payload.length} bytes)`);
+            window.client.send(msg);
+        }
+
+        #handleCustomMessage = (msg) => {
+            if (msg?.data?.m !== "drawboard" || !msg.data.d) return;
+            //console.log("reciev:", msg);
+            const uid = msg.user ? String(msg.user) : null;
+            let decoded; try { decoded = atob(msg.data.d); } catch { return; }
+            if (!decoded) return;
+            const bytes = new Uint8Array(decoded.length);
+            for (let i = 0; i < decoded.length; i++) bytes[i] = decoded.charCodeAt(i);
+            const b = Array.from(bytes), s = { i: 0 }, R = () => this.#readUint16(b, s) / 0xFFFF;
+            const C = () => ({ c: this.#readColor(b, s), t: Math.clamp(0, this.#readUint8(b, s) / 0xFF, 1) });
+            const U = () => this.#readULEB128(b, s), V = (n) => { const v = []; for (let i = 0; i < n; i++) v.push({ x: R(), y: R() }); return v; };
+            try {
+                for (let i = 0, n = U(); i < n; i++) {
+                    const op = this.#readUint8(b, s);
+                    console.log(`op ${op} from user ${uid}`);
+                    if (op === 0) { if (uid) this.#removeLinesByOwner(uid); }
+                    // I want to die
+                    else if (op === 1) { const l = U(), u = []; for (let k = 0; k < l; k++) u.push(this.#readUint32(b, s) >>> 0); this.#removeShapesByUUIDs(u); }
+                    else if (op === 2) { const { c, t } = C(); this.renderLine({ x1: R(), y1: R(), x2: R(), y2: R(), color: c, transparency: t, lineWidth: U(), lifeMs: U(), fadeMs: U(), uuid: this.#readUint32(b, s) >>> 0, owner: uid }); }
+                    else if (op === 3) { const { c, t } = C(); this.#chains.set(uid || "_" + Date.now(), { color: c, transparency: t, lineWidth: U(), lifeMs: U(), fadeMs: U(), xu: this.#readUint16(b, s), yu: this.#readUint16(b, s) }); }
+                    else if (op === 4) { const ch = this.#chains.get(uid || "_" + Date.now()), len = U(); let px = ch?.xu / 0xFFFF || 0, py = ch?.yu / 0xFFFF || 0; const cl = ch?.color ?? "#fff", tr = ch?.transparency ?? 1, lw = ch?.lineWidth ?? 3, lms = ch?.lifeMs ?? 5000, fms = ch?.fadeMs ?? 3000; for (let k = 0; k < len; k++) { const x2 = R(), y2 = R(), u = this.#readUint32(b, s) >>> 0; this.renderLine({ x1: px, y1: py, x2, y2, color: cl, transparency: tr, lineWidth: lw, lifeMs: lms, fadeMs: fms, uuid: u, owner: uid }); px = x2; py = y2; } if (ch) { ch.xu = Math.round(px * 0xFFFF); ch.yu = Math.round(py * 0xFFFF); } }
+                    else if (op === 5) { const { c, t } = C(); this.renderTriangle({ x1: R(), y1: R(), x2: R(), y2: R(), x3: R(), y3: R(), color: c, transparency: t, lifeMs: U(), fadeMs: U(), uuid: this.#readUint32(b, s) >>> 0, owner: uid }); }
+                    else if (op === 6) { const { c, t } = C(); this.renderEllipse({ cx: R(), cy: R(), rx: R(), ry: R(), color: c, transparency: t, lineWidth: U(), lifeMs: U(), fadeMs: U(), subType: "stroke", uuid: this.#readUint32(b, s) >>> 0, owner: uid }); }
+                    else if (op === 7) { const { c, t } = C(); this.renderEllipse({ cx: R(), cy: R(), rx: R(), ry: R(), color: c, transparency: t, lifeMs: U(), fadeMs: U(), subType: "fill", uuid: this.#readUint32(b, s) >>> 0, owner: uid }); }
+                    else if (op === 8) { const { c, t } = C(); this.renderText({ x: R(), y: R(), rotation: R(), text: this.#readString(b, s), color: c, transparency: t, fontSize: U(), lifeMs: U(), fadeMs: U(), options: this.#readUint8(b, s), uuid: this.#readUint32(b, s) >>> 0, owner: uid }); }
+                    else if (op === 9) { const { c, t } = C(); this.renderPolygon({ vertices: V(U()), color: c, transparency: t, lineWidth: U(), lifeMs: U(), fadeMs: U(), subType: "stroke", uuid: this.#readUint32(b, s) >>> 0, owner: uid }); }
+                    else if (op === 10) { const { c, t } = C(); this.renderPolygon({ vertices: V(U()), color: c, transparency: t, lifeMs: U(), fadeMs: U(), subType: "fill", uuid: this.#readUint32(b, s) >>> 0, owner: uid }); }
+                }
+            } catch (e) { console.warn(e); }
         }
 
         #readUint8 = (bytes, state) => {
@@ -811,7 +859,7 @@
                 }
             }
 
-            // this.#sendCustomData(bytes);
+            this.#sendCustomData(bytes);
             this.#opBuffer.length = 0;
         }
 
