@@ -421,8 +421,19 @@ document.getElementById('invite-join').onclick = () => {
 }
 document.getElementById('server-list').onchange = () => document.getElementById('server-select').click();
 document.getElementById('channel-list').onchange = () => document.getElementById('channel-select').click();
-document.getElementById('chat-toggle').onclick = () => {
+document.getElementById('chat-toggle').onclick = function() {
 	chat.box.hidden = !chat.box.hidden;
+	this.textContent = chat.box.hidden ? 'Show Chat' : 'Hide Chat';
+}
+document.getElementById('drawings-toggle').onclick = function() {
+	drawboard.enabled = !drawboard.enabled;
+	drawboard.canvas.style.display = drawboard.enabled ? '' : 'none';
+	this.textContent = drawboard.enabled ? 'Hide Drawings' : 'Show Drawings';
+}
+document.getElementById('cursors-toggle').onclick = function() {
+	var el = document.getElementById('cursors');
+	el.hidden = !el.hidden;
+	this.textContent = el.hidden ? 'Show Cursors' : 'Hide Cursors';
 }
 setInterval(() => {
 	//client.send({m: "guild", type: "list"})
