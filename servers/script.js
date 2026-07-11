@@ -579,7 +579,7 @@ upload.input.onchange = async () => {
 	for (var filenum = 0; filenum < upload.input.files.length; filenum++) {
 	await upload.upload(filenum).then(a => {
 		if (!a) return;
-		chat.input.value += (chat.input.value.endsWith(' ') ? '' : ' ') + `${location.origin}/files/${a} `;
+		chat.input.value += (chat.input.value.endsWith(' ') ? '' : ' ') + `https://chat.8448.space/files/${a} `;
 		chat.input.focus();
 	})
 	}
