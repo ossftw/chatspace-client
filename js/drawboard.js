@@ -190,6 +190,11 @@
             document.addEventListener("keyup", (e) => {
                 this.#isShiftDown = e.shiftKey;
                 this.#isCtrlDown = e.ctrlKey || e.metaKey;
+                if (this.#clicking && !this.#isShiftDown && !this.#isCtrlDown) {
+                    this.#clicking = false;
+                    this.#canvas.style.pointerEvents = "none";
+                    this.#flushOpBuffer();
+                }
             });
             document.addEventListener("mousedown", (e) => {
                 this.#updatePosition(e);
@@ -198,11 +203,13 @@
 
                 if ((this.#isShiftDown || this.#isCtrlDown) && this.#clicking) {
                     e.preventDefault();
+                    this.#canvas.style.pointerEvents = "auto";
                 }
             });
             document.addEventListener("mouseup", (e) => {
                 this.#updatePosition(e);
                 this.#clicking = false;
+                this.#canvas.style.pointerEvents = "none";
                 this.#flushOpBuffer();
             });
             document.addEventListener("mousemove", (e) => {
