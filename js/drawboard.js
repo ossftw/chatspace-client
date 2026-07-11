@@ -310,7 +310,7 @@
             try {
                 for (let i = 0, n = U(); i < n; i++) {
                     const op = this.#readUint8(b, s);
-                    console.log(`op ${op} from user ${uid}`);
+                    //console.log(`op ${op} from user ${uid}`);
                     if (op === 0) { if (uid) this.#removeLinesByOwner(uid); }
                     // I want to die
                     else if (op === 1) { const l = U(), u = []; for (let k = 0; k < l; k++) u.push(this.#readUint32(b, s) >>> 0); this.#removeShapesByUUIDs(u); }
