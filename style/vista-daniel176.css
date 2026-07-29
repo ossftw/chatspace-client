@@ -1,0 +1,136 @@
+h1, h2, h3, h4, h5, h6, p, span, b, pre {
+        color: rgb(0, 0, 0);
+}
+
+pre {
+        white-space: pre-wrap;
+}
+
+a {
+        color: rgb(0, 0, 255);
+}
+
+button, select, input, input::file-selector-button {
+        color: rgb(0, 0, 0);
+    background: linear-gradient(180deg,rgba(255, 255, 255, 1) 0%, rgba(250, 250, 250, 1) 42%, rgba(217, 217, 217, 1) 50%, rgba(204, 204, 204, 1) 100%);    border: 1px solid #aaa;
+        border: 1px solid #aaa;
+    border-radius: 3px;
+    transition: background 0.5s ease-in-out 0.2s;
+}
+
+button:hover, select:hover, input:hover {
+    background: linear-gradient(180deg,rgba(237, 252, 255, 1) 0%, rgba(224, 247, 255, 1) 42%, rgba(179, 232, 255, 1) 50%, rgba(217, 242, 255, 1) 100%);
+    border: 1px solid #aaa;
+    border-radius: 3px;
+}
+
+button:focus, select:focus, input:focus {
+    background: linear-gradient(180deg,rgba(201, 245, 255, 1) 0%, rgba(201, 245, 255, 1) 42%, rgba(64, 220, 255, 1) 50%, rgba(115, 229, 255, 1) 100%);
+        border: 1px solid #0063ac;
+    border-radius: 3px;
+}
+
+#users {
+    width:45%;
+}
+
+#users div {
+    display: flex;
+    background: linear-gradient(180deg,rgba(255, 255, 255, 1) 0%, rgba(237, 237, 237, 1) 42%, rgba(204, 204, 204, 1) 50%, rgba(219, 219, 219, 1) 100%);
+    border-radius: 3px;
+    text-shadow: #000000 1px 0 2px;
+    line-height: 30px;
+    margin-left: 50px;
+    align-items: center;
+    width: 40%
+    gap: 6px;
+}
+
+#users div span {
+    margin-left: 4px;
+}
+
+#users div button {
+    height: 20px;
+    float: left;
+    margin-top: 5px;
+    margin-left: auto;
+}
+
+ul.bar {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        width: 25%;
+        background: linear-gradient(180deg,rgba(245, 252, 255, 1) 0%, rgba(219, 239, 255, 1) 100%);
+        position: fixed;
+        height: 100%;
+        overflow: auto;
+}
+li a {
+        display: block;
+        color: #000000;
+        padding: 8px 16px;
+        text-decoration: none;
+}
+
+li a:hover {
+    border: 1px solid #01b900;
+    background: linear-gradient(180deg,rgba(245, 255, 245, 1) 0%, rgba(245, 255, 245, 1) 42%, rgba(189, 255, 189, 1) 50%, rgba(219, 255, 219, 1) 100%);
+}
+
+.active {
+    border: 1px solid #01b900;
+    background: linear-gradient(180deg,rgba(176, 255, 176, 1) 0%, rgba(122, 255, 122, 1) 42%, rgba(0, 212, 0, 1) 50%, rgba(114, 247, 114, 1) 100%);
+}
+
+#chat {
+        position: fixed;
+        bottom: 0px;
+        left: 25%;
+        width: 75%;
+        vertical-align: bottom;
+        font-size: 13px;
+        color: #000;
+        text-shadow: #eaeaea 1px 1px;
+}
+#chat,#chat * {
+    user-select: text;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+}
+#chat ul {
+        list-style: none;
+        margin: 4px
+        padding: 0;
+        background-attachment: local;
+        max-height: 50em;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        word-wrap: break-word;
+}
+#chat li {
+        padding: 2px;
+        opacity: 0;
+        color: #000;
+}
+
+#chat input {
+        margin: 4px;
+        width: 97%;
+    background: linear-gradient(180deg,rgba(237, 252, 255, 1) 0%, rgba(224, 247, 255, 1) 42%, rgba(179, 232, 255, 1) 50%, rgba(217, 242, 255, 1) 100%);
+    border: 1px solid #aaa;
+    text-shadow: none;
+        float: right;
+        color: #000;
+        border-radius: 8px
+}
+
+#chat input:focus {
+        outline: 0;
+    background: linear-gradient(180deg,rgba(201, 245, 255, 1) 0%, rgba(201, 245, 255, 1) 42%, rgba(64, 220, 255, 1) 50%, rgba(115, 229, 255, 1) 100%);
+        border: 1px solid #0063ac;
+    text-shadow: none;
+        color: #000;
+}

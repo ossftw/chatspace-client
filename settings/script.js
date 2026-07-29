@@ -87,7 +87,8 @@ Object.entries({
 	"audioanytime": "audioAnyTime",
 	"embeds": "embeds",
 	"nogradient": "disableGradient",
-	"hideblocks": "hideBlocks"
+	"hideblocks": "hideBlocks",
+    "globalnotifs": "globalNotifs"
 }).forEach(setting => {
 	var check = document.getElementById(setting[0]);
 	if (!check) return;
@@ -97,4 +98,85 @@ Object.entries({
 			localStorage[setting[1]] = true;
 		} else delete localStorage[setting[1]];
 	}
+})
+//notif set
+document.getElementById('notif-empty').onclick = () => {
+        client.send({m: "guild", type: "setnotif"});
+};
+document.getElementById('notifdef-send').onclick = () => {
+        client.send({m: "guild", type: "setnotif", sub: "default", dm: +document.getElementById('notifdef-dm').value, guild: +document.getElementById('notifdef-guild').value})
+}
+document.getElementById('notifguild-send').onclick = () => {
+        var sendSet = {};
+        sendSet[document.getElementById('notifguild-id').value] = +document.getElementById('notifguild-set').value;
+        client.send({m: "guild", type: "setnotif", sub: "guild", set: sendSet});
+}
+document.getElementById('notifdm-send').onclick = () => {
+        var sendSet = {};
+        sendSet[document.getElementById('notifdm-id').value] = +document.getElementById('notifdm-set').value;
+        client.send({m: "guild", type: "setnotif", sub: "dm", set: sendSet});
+}
+client.on('guild', msg => {
+        if (msg.type !== "setnotif") return;
+        var notifDiv = document.getElementById('notifinfo');
+        var notifDef = {dm: {'0': 'No DM Messages', '2': 'DM Pings Only', '3': 'All DM Messages'}, guild: {'0': 'No server messages', '1': 'Pings from server admins', '2': 'Pings from all server members', '3': 'All server messages'}};
+        if (!msg.notif) {
+                var noSet = document.createElement('span');
+                noSet.textContent = "No Notif Settings";
+                return notifDiv.innerHTML = noSet.outerHTML;
+        };
+        notifDiv.innerHTML = `<h3>Servers</h3>`;
+        var guildDiv = document.createElement('div');
+        var defaultSpan = document.createElement('span');
+        defaultSpan.textContent = `Default - ${notifDef.guild[msg.notif.guild.default]}`;
+        guildDiv.append(defaultSpan);
+        notifDiv.append(guildDiv);
+        Object.entries(msg.notif.guild.custom).forEach(cus => {
+                var cusDiv = document.createElement('div');
+                var nameSpan = document.createElement('b');
+                nameSpan.textContent = cus[0];
+                cusDiv.append(nameSpan);
+                var setSpan = document.createElement('span');
+                setSpan.textContent = ` - ${notifDef.guild[cus[1]]} `;
+                cusDiv.append(setSpan);
+                var resetBut = document.createElement('button');
+                resetBut.type = "button";
+                resetBut.textContent = "Reset";
+                resetBut.onclick = () => {
+                        var sendSet = {};
+                        sendSet[cus[0]] = -1;
+                        client.send({m: "guild", type: "setnotif", sub: "guild", set: sendSet});
+                };
+                cusDiv.append(resetBut);
+                notifDiv.append(cusDiv);
+        })
+        var dmH = document.createElement('h3');
+        dmH.textContent = "DMs";
+        notifDiv.append(dmH);
+
+        var dmDiv = document.createElement('div');
+        var defaulttSpan = document.createElement('span');
+        defaulttSpan.textContent = `Default - ${notifDef.dm[msg.notif.dm.default]}`;
+        dmDiv.append(defaulttSpan);
+        notifDiv.append(dmDiv);
+        Object.entries(msg.notif.dm.custom).forEach(cus => {
+                var cusDiv = document.createElement('div');
+                var nameSpan = document.createElement('b');
+                nameSpan.textContent = cus[0];
+                cusDiv.append(nameSpan);
+                var setSpan = document.createElement('span');
+                setSpan.textContent = ` - ${notifDef.dm[cus[1]]} `;
+                cusDiv.append(setSpan);
+                var resetBut = document.createElement('button');
+                resetBut.type = "button";
+                resetBut.textContent = "Reset";
+                resetBut.onclick = () => {
+                        var sendSet = {};
+                        sendSet[cus[0]] = -1;
+                        client.send({m: "guild", type: "setnotif", sub: "dm", set: sendSet});
+                };
+                cusDiv.append(resetBut);
+                notifDiv.append(cusDiv);
+        })
+
 })

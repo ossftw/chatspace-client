@@ -115,6 +115,7 @@ chat.receive = (msg, above, current) => {
 				var linkEl = document.createElement('img');
 				linkEl.src = word;
 				linkEl.style.maxWidth = "50%";
+				linkEl.style.maxHeight = "50%";
 				messageHt.append(document.createElement('br'));
 				} else if (['mp3', 'aac', 'ogg', 'flac', 'wav'].includes(extension)) {
 				//audio embed (ts sucks)
@@ -123,6 +124,7 @@ chat.receive = (msg, above, current) => {
 				var sourceEl = document.createElement('source');
 				sourceEl.src = word;
 				linkEl.style.maxWidth = "50%";
+				linkEl.style.maxHeight = "50%";
 				linkEl.append(sourceEl);
 				messageHt.append(document.createElement('br'));
 				} else if (['mp4', 'avi', 'mov', 'mpeg'].includes(extension)) {
@@ -132,6 +134,7 @@ chat.receive = (msg, above, current) => {
 				var sourceEl = document.createElement('source');
 				sourceEl.src = word;
 				linkEl.style.maxWidth = "50%";
+				linkEl.style.maxHeight = "50%";
 				linkEl.append(sourceEl);
 				messageHt.append(document.createElement('br'));
 				} else {
@@ -379,7 +382,7 @@ document.getElementById('channel-select').onclick = () => {
 	if (client.channel) client.send({m: "channel", type: "leave", channel: client.channel});
 	client.channel = document.getElementById('channel-list').value;
 	client.send({m: "channel", type: "join", channel: client.channel, chat: true});
-	document.getElementById('server-name').textContent = `${client.guilds.find(a => a.id === client.guild).name} - ${client.channels.find(a => a.id === client.channel).name} [${client.channels.find(a => a.id === client.channel).id}]`;
+	document.getElementById('server-name').textContent = `${client.guilds.find(a => a.id === client.guild).name} [${client.guild}] - ${client.channels.find(a => a.id === client.channel).name} [${client.channels.find(a => a.id === client.channel).id}]`;
 	chat.clear();
 }
 document.getElementById('channel-del').onclick = () => {
@@ -584,3 +587,28 @@ upload.input.onchange = async () => {
 	})
 	}
 }
+client.on('notif', msg => {
+        if (!localStorage.globalNotifs) return;
+
+        if (document.hasFocus()) {
+                if (msg.channel.id === client.channel) return;
+                var docUser = document.createElement('span');
+                docUser.textContent = `[${msg.message.user.id}] ${msg.message.user.nickname}`;
+                var docLoc = document.createElement('span');
+                docLoc.textContent = (msg.guild.id === "dms") ? msg.guild.name :`${msg.channel.name} (${msg.guild.name})`;
+                var docMsg = document.createElement('span');
+                docMsg.textContent = `${msg.message.message}`;
+                var doc = document.createElement('a');
+                doc.append(docUser, document.createElement('br'), docLoc, document.createElement('br'), docMsg);
+                var liDoc = document.createElement('li');
+                liDoc.append(doc);
+                document.getElementById('bar').append(liDoc);
+                liDoc.onclick = () => liDoc.remove()
+                setTimeout(() => liDoc.remove(), 7000);
+        } else {
+                Notification.requestPermission(() => new Notification(`[${msg.message.user.id}] ${msg.message.user.nickname} in ` + ((msg.guild.id === "dms") ? msg.guild.name : `#${msg.channel.name} (${msg.guild.name})`), {body: msg.message.message}));
+        };
+        if ((localStorage.audioAnyTime || !document.hasFocus()) && chat.audio && chat.audio.play) chat.audio.play();
+
+})
+

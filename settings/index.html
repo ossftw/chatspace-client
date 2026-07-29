@@ -65,7 +65,53 @@
 		<input id="embeds" type="checkbox"/><span>Enable Embeds</span><br>
 		<input id="nogradient" type="checkbox"/><span>Disable Gradients</span><br>
 		<input id="hideblocks" type="checkbox"/><span>Hide Blocked Messages</span><br>
-		<button id="custom-audio" type="button">Set Custom Audio</button>
+		<input id="globalnotifs" type="checkbox"/><span>Show Global Notifications (Must Setup First Below)</span><br>
+		<button id="custom-audio" type="button">Set Custom Audio</button><br><br>
+
+
+
+
+                <h2>Notifications</h2>
+                <button id="notif-empty" type="button">Request Notif Settings</button>
+                <h3>Set Defaults</h3>
+
+                <select id="notifdef-guild">
+                <option value="0">No server messages</option>
+                <option value="1">Pings from server admins</option>
+                <option value="2">Pings from all server members</option>
+                <option value="3">All server messages</option>
+                </select>
+                <select id="notifdef-dm">
+                <option value="0">No DM messages</option>
+                <option value="2">DM Pings only</option>
+                <option value="3">All DM messages</option>
+                </select>
+                <button id="notifdef-send" type="button">Set</button>
+
+                <h3>Set Per-Server</h3>
+
+                <input id="notifguild-id" placeholder="Server ID" maxlength="64" autocomplete="off" />
+                <select id="notifguild-set">
+                <option value="0">No server messages</option>
+                <option value="1">Pings from server admins</option>
+                <option value="2">Pings from all server members</option>
+                <option value="3">All server messages</option>
+                </select>
+                <button id="notifguild-send" type="button">Set</button>
+
+                <h3>Set Per-DM</h3>
+
+                <input id="notifdm-id" placeholder="DM Channel ID" maxlength="64" autocomplete="off" />
+                <select id="notifdm-set">
+                <option value="0">No DM messages</option>
+                <option value="2">DM Pings only</option>
+                <option value="3">All DM messages</option>
+                </select>
+                <button id="notifdm-send" type="button">Set</button>
+
+                <h3>Status</h3>
+                <div id="notifinfo"></div>
+
 		</center>
 		</div>
 	</body>
